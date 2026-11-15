@@ -1,0 +1,30 @@
+{
+ "slug": "kentsel-donusum",
+ "title": "Kentsel dönüşüm",
+ "keyword": "kentsel dönüşüm",
+ "description": "Kentsel dönüşüm, deprem riski taşıyan veya altyapı yetersizliği bulunan yapıların yenilenmesi, güçlendirilmesi ve imar planlarına uygun hale getirilmesi sürecini ifade eder. Bu kapsamda yıkım, inşaat, hak sahipliği ve belediye projeleri yerel basında sıkça ele alınır.",
+ "terms": [
+  {"t": "kentsel dönüşüm", "kind": "core", "on": true, "src": "seed", "sim": 0.804, "prec": 1.0, "hits": 21},
+  {"t": "riskli yapı", "kind": "core", "on": true, "src": "llm", "sim": 0.557, "prec": 1.0, "hits": 1},
+  {"t": "yapı güçlendirme", "kind": "core", "on": true, "src": "llm", "sim": 0.633, "hits": 0},
+  {"t": "deprem riski", "kind": "weak", "on": true, "src": "llm", "sim": 0.572, "prec": 0.0, "hits": 1},
+  {"t": "KGM", "kind": "weak", "on": true, "src": "llm-kurum", "sim": 0.443, "prec": 0.0, "hits": 1},
+  {"t": "tahliye süreci", "kind": "weak", "on": true, "src": "llm-iliskili", "sim": 0.579, "hits": 0},
+  {"t": "hak sahipliği", "kind": "weak", "on": true, "src": "llm-iliskili", "sim": 0.501, "hits": 0},
+  {"t": "afet yönetimi", "kind": "core", "on": false, "src": "llm", "sim": 0.545, "prec": 0.0, "hits": 2},
+  {"t": "Belediye", "kind": "weak", "on": false, "src": "llm-kurum", "sim": 0.579, "prec": 0.0, "hits": 893},
+  {"t": "bina", "kind": "weak", "on": false, "src": "llm-belirsiz", "sim": 0.496, "prec": 0.0, "hits": 102},
+  {"t": "AFAD", "kind": "weak", "on": false, "src": "llm-kurum", "sim": 0.524, "prec": 0.0, "hits": 33},
+  {"t": "TOKİ", "kind": "weak", "on": false, "src": "llm-kurum", "sim": 0.582, "prec": 0.0, "hits": 28}
+ ],
+ "context": ["dönüşüm", "deprem", "güçlendirme", "yeni", "eski", "yıkım", "yapı", "imar", "risk", "proje", "hak", "sahipliği"],
+ "exclude": [],
+ "examples": ["Eski çarşı bölgesinde kentsel dönüşüm çalışmaları başladı", "Deprem riski taşıyan binalar için yıkım kararı alındı", "Belediye, kentsel dönüşüm projesinde hak sahipliği sürecini açıkladı", "Yeni imar planı kapsamında kentsel dönüşüm alanı genişletildi", "Riskli yapı tespiti yapılan binalar için tahliye süreci başlatıldı", "Kentsel dönüşüm projesinde ilk kazma vuruldu", "Yapı güçlendirme çalışmaları hız kazandı", "Kentsel dönüşümde yeni etap için ihaleye çıkıldı"],
+ "fields": ["title", "summary"],
+ "semantic": true,
+ "active": true,
+ "color": "",
+ "created": "2026-11-15",
+ "updated": "2026-11-15",
+ "model": {}
+}

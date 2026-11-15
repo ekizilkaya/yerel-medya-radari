@@ -1,0 +1,104 @@
+name: Günlük tarama
+
+# Bilgisayar kapalıyken çalışan kısım: her gün tüm yerel kaynakları tarar, konu eşleşmelerini
+# depoya işler, başlık arşivini aylık Release'e yükler ve panoyu GitHub Pages'te yayınlar.
+# Herkese açık depolarda GitHub Actions ve Pages ücretsizdir.
+
+on:
+  schedule:
+    - cron: "20 3 * * *"     # 06:20 TSİ — sabah taraması
+    - cron: "20 15 * * *"    # 18:20 TSİ — akşam taraması (aynı güne eklenir)
+  workflow_dispatch:
+    inputs:
+      backfill:
+        description: "Tüm arşivi indir ve konuları baştan eşleştir (yeni konunun geçmişini doldurur)"
+        type: boolean
+        default: false
+  push:
+    branches: [main]
+    paths:
+      - "data/topics/**"
+      - "data/config.json"
+      - "data/sources.json"
+      - "site/**"
+      - "radar/**"
+      - "scripts/daily_scan.py"
+      - ".github/workflows/daily-scan.yml"
+
+permissions:
+  contents: write      # eşleşmeleri depoya işlemek ve arşivi Release'e yüklemek için
+  pages: write
+  id-token: write
+
+concurrency:
+  group: radar
+  cancel-in-progress: false
+
+jobs:
+  scan:
+    name: Tara ve eşleştir
+    runs-on: ubuntu-latest
+    timeout-minutes: 50
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: requirements-ci.txt
+
+      - name: Bağımlılıkları kur
+        run: pip install -r requirements-ci.txt
+
+      - name: Testler
+        run: python tests/test_topics.py
+
+      # Anlamsal aday taraması için küçük gömme modeli ve llama.cpp (ilk çalıştırmada indirilir)
+      - name: Model ve llama.cpp önbelleği
+        uses: actions/cache@v6
+        with:
+          path: runtime
+          key: radar-runtime-${{ runner.os }}-${{ hashFiles('data/config.json') }}
+          restore-keys: radar-runtime-${{ runner.os }}-
+
+      - name: Tara, eşleştir, pano verisini üret
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PYTHONUTF8: "1"
+        run: |
+          if [ "${{ inputs.backfill }}" = "true" ]; then
+            python scripts/daily_scan.py --pull-all --rematch --push
+          else
+            python scripts/daily_scan.py --pull 21 --push
+          fi
+
+      - name: Sonuçları depoya işle
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/matches data/stats
+          if git diff --cached --quiet; then
+            echo "Yeni eşleşme yok."
+          else
+            git commit -m "Günlük tarama $(TZ=Europe/Istanbul date +%F)"
+            git pull --rebase --autostash
+            git push
+          fi
+
+      - uses: actions/configure-pages@v6
+
+      - uses: actions/upload-pages-artifact@v5
+        with:
+          path: site
+
+  deploy:
+    name: Panoyu yayınla
+    needs: scan
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v5

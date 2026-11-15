@@ -1,0 +1,4 @@
+# Elle eklenen kaynaklar — her satır: il,alan_adi
+# Ekledikten sonra:  python scripts/update_sources.py --no-bik
+# Örnek:
+# Sivas,ornekhaber.com

@@ -1,0 +1,16 @@
+__pycache__/
+*.pyc
+*.tmp
+.venv/
+
+# Yalnızca bu bilgisayar: SQLite arşiv, model ayarları, günlükler
+data/local/
+
+# Günlük başlık arşivi depoya girmez; aylık GitHub Release'lerinde saklanır
+data/archive/
+
+# İndirilen llama.cpp ve modeller
+runtime/
+
+# Pano verisi her taramada data/ altından yeniden üretilir
+site/data/
